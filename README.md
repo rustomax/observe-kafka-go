@@ -1,1 +1,3 @@
-# Unofficial Observe Apache Kafka consumer
+# observe-kafka-go
+
+Unofficial Observe Apache Kafka consumer
