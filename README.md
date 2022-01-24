@@ -2,6 +2,9 @@
 
 Unofficial Observe Apache Kafka consumer
 
+## High-level Architecture
+
+![Architecture](./screenshots/architecture.png)
 
 ## Instructions
 
@@ -54,16 +57,24 @@ sudo systemctl daemon-reload
 sudo systemctl enable --now observe-kafka-go.service
 ```
 
+## Verification
+
 ### Check that service is running and sending data to Observe
 
 ```sh
 sudo systemctl status observe-kafka-go
 ```
 
-![Screenshot](./screenshots/consumer-service.png)
+![Consumer-Service](./screenshots/consumer-service.png)
 
 ### Review the detailed consumer log
 
 ```sh
 tail -f /var/log/observe/observe-kafka-go.log
 ```
+
+### Check that the data is coming into Observe
+
+Verify that the datastream (or the Observation table) is receiving the events, i.e.
+
+![Datastream](./screenshots/datastream.png)
