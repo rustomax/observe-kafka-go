@@ -16,7 +16,7 @@ go build
 
 ### Create configuration file
 
-Create config file at an arbitrary location, i.e. `/etc/observe/kafka-linux-host-monitoring.json`, replacing placeholders with correct values:
+Create config file `/etc/observe/kafka-linux-host-monitoring.json`, replacing placeholders with correct values.
 
 ```sh
 {
@@ -29,6 +29,8 @@ Create config file at an arbitrary location, i.e. `/etc/observe/kafka-linux-host
 
 > The configuration above works with the newer Datastreams API. To ingest into the conventional Observations API, please change the apiUrl to point to `collect.observeinc.com/v1/observations` and, instead of using the datastream token, provide your customer token.
 
+> If you change the location of the config file, don't forget to update systemd script `observe-kafka-go.service` with the path to the config file `ExecStart=/usr/bin/observe-kafka-go /etc/observe/kafka-linux-host-monitoring.json`
+
 ### Install the binary and systemd service
 
 ```sh
@@ -40,7 +42,7 @@ sudo systemctl daemon-reload
 sudo systemctl enable --now observe-kafka-go.service
 ```
 
-### Check that service is running and seding data to Observe
+### Check that service is running and sending data to Observe
 
 ```sh
 sudo systemctl status observe-kafka-go
