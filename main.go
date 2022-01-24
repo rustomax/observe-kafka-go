@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"log"
 	"os"
-	"time"
 
 	observe "github.com/rustomax/observe-common-go"
 	"github.com/segmentio/kafka-go"
@@ -46,22 +45,23 @@ func consume(ctx context.Context, config observe.Config) {
 	l := log.New(os.Stdout, "INFO: Kafka reader: ", 0)
 
 	r := kafka.NewReader(kafka.ReaderConfig{
-		Brokers:  []string{brokerAddress},
-		Topic:    topic,
-		GroupID:  consumerGroup,
-		MinBytes: 100,
-		MaxBytes: 1e6,
-		MaxWait:  10 * time.Second,
-		Logger:   l,
+		Brokers:     []string{brokerAddress},
+		Topic:       topic,
+		StartOffset: kafka.LastOffset,
+		GroupID:     consumerGroup,
+		//MinBytes:    100,
+		//MaxBytes:    1e6,
+		//MaxWait:     10 * time.Second,
+		Logger: l,
 	})
 	for {
 		// ReadMessage blocks until we receive the next event
 		msg, err := r.ReadMessage(ctx)
+
 		if err != nil {
 			log.Printf("ERROR: Failed to read message from Kafka: %v", err.Error())
 			continue
 		}
-
 		// Convert Kafka message to JSON as expected by Observe HTTP collector API
 		message := json.RawMessage(msg.Value)
 		var payload Payload

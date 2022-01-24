@@ -1,0 +1,16 @@
+[Unit]
+Description=Kafka Observe LHM Collector
+Requires=multi-user.target network.target
+After=multi-user.target network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/observe-kafka-go /etc/observe/kafka-linux-host-monitoring.json
+Restart=no
+#RestartSec=10
+#StandardOutput=syslog
+#StandardError=syslog
+#SyslogIdentifier=observe-kafka-go
+
+[Install]
+WantedBy=multi-user.target
