@@ -31,12 +31,24 @@ Create config file `/etc/observe/kafka-linux-host-monitoring.json`, replacing pl
 
 > If you change the location of the config file, don't forget to update systemd script `observe-kafka-go.service` with the path to the config file `ExecStart=/usr/bin/observe-kafka-go /etc/observe/kafka-linux-host-monitoring.json`
 
-### Install the binary and systemd service
+### Install the binary
 
 ```sh
 sudo mv observe-kafka-go /usr/bin/
 sudo chown root.root /usr/bin/observe-kafka-go
-sudo cp observe-kafka-go.service /etc/systemd/system/
+```
+
+### Configure rsyslog
+```sh
+sudo cp scripts/40-observe-kafka-go.conf /etc/rsyslog.d
+sudo mkdir /var/log/observe/
+sudo chown syslog.adm /var/log/observe/
+```
+
+### Install systemd service
+
+```sh
+sudo cp scripts/observe-kafka-go.service /etc/systemd/system/
 sudo chown root.root /etc/systemd/system/observe-kafka-go.service
 sudo systemctl daemon-reload
 sudo systemctl enable --now observe-kafka-go.service
@@ -48,4 +60,10 @@ sudo systemctl enable --now observe-kafka-go.service
 sudo systemctl status observe-kafka-go
 ```
 
-![Screenshot](./screenshot.png)
+![Screenshot](./screenshots/consumer-service.png)
+
+### Review the detailed consumer log
+
+```sh
+tail -f /var/log/observe/observe-kafka-go.log
+```
