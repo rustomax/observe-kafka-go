@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"log"
 	"os"
 
@@ -10,11 +11,15 @@ import (
 	"github.com/segmentio/kafka-go"
 )
 
-const (
-	topic         = "linux-host-monitoring"
-	brokerAddress = "kafka1.home:9092"
-	consumerGroup = "observe-consumer"
-)
+type Config struct {
+	ApiUrl        string
+	ExtraPath     string
+	Customer      string
+	Token         string
+	Topic         string
+	BrokerAddress string
+	ConsumerGroup string
+}
 
 type Payload struct {
 	Data json.RawMessage `json:"data"`
@@ -29,7 +34,7 @@ func main() {
 	}
 
 	// Read config file
-	config, err := observe.ReadConfig(config_file_path)
+	config, err := ReadConfig(config_file_path)
 	if err != nil {
 		log.Fatalf("ERROR: Failed to load config file: %v", err)
 	} else {
@@ -41,14 +46,33 @@ func main() {
 	consume(ctx, config)
 }
 
-func consume(ctx context.Context, config observe.Config) {
+func ReadConfig(config_path string) (Config, error) {
+	config := Config{}
+	config_file, err := os.Open(config_path)
+	if err != nil {
+		return config, err
+	}
+	defer config_file.Close()
+
+	decoder := json.NewDecoder(config_file)
+	err = decoder.Decode(&config)
+	if err != nil {
+		return config, err
+	}
+
+	fmt.Printf("%v\n", config)
+
+	return config, nil
+}
+
+func consume(ctx context.Context, config Config) {
 	l := log.New(os.Stdout, "INFO: Kafka reader: ", 0)
 
 	r := kafka.NewReader(kafka.ReaderConfig{
-		Brokers:     []string{brokerAddress},
-		Topic:       topic,
+		Brokers:     []string{config.BrokerAddress},
+		Topic:       config.Topic,
 		StartOffset: kafka.LastOffset,
-		GroupID:     consumerGroup,
+		GroupID:     config.ConsumerGroup,
 		//MinBytes:    100,
 		//MaxBytes:    1e6,
 		//MaxWait:     10 * time.Second,
@@ -72,7 +96,7 @@ func consume(ctx context.Context, config observe.Config) {
 		}
 
 		// Send payload to Observe
-		result, err := observe.SendPayload(payload, config)
+		result, err := observe.SendPayload(payload, config.ApiUrl, config.ExtraPath, config.Customer, config.Token)
 		if err != nil {
 			log.Printf("ERROR: Failed to send json payload to Observe API: %v", err)
 		} else {

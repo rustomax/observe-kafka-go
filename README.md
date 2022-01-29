@@ -16,14 +16,31 @@ go build
 
 ### Create configuration file
 
-Create config file `/etc/observe/kafka-linux-host-monitoring.json`, replacing placeholders with correct values.
+Create config file. i.e. `/etc/observe/kafka-linux-host-monitoring.json`, replacing placeholders with correct values.
 
 ```sh
 {
     "apiUrl": "collect.observeinc.com/v1/http",
     "extraPath": "observe/collector/host",
     "customer": "<OBSERVE_CUSTOMER_NUMBER>",
-    "token": "<OBSERVE_TOKEN>"
+    "token": "<OBSERVE_TOKEN>",
+    "topic": "<KAFKA_TOPIC",
+    "brokerAddress": "<KAFKA_BROKER_URI",
+    "consumerGroup": "<KAFKA_CONSUMER_GROUP"    
+}
+```
+
+For example:
+
+```json
+{
+    "apiUrl": "collect.observeinc.com/v1/http",
+    "extraPath": "observe/collector/host",
+    "customer": "123456789012",
+    "token": "super-secret-token-generated-by-observe",
+    "topic": "linux-host-monitoring",
+    "brokerAddress": "kafka1.home:9092",
+    "consumerGroup": "observe-consumer"
 }
 ```
 
