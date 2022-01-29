@@ -56,6 +56,7 @@ For example:
 ```sh
 sudo mv observe-kafka-go /usr/bin/
 sudo chown root.root /usr/bin/observe-kafka-go
+chmod 755 /usr/bin/observe-kafka-go
 ```
 
 ### Configure rsyslog
