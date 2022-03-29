@@ -40,14 +40,12 @@ For example:
     "apiUrl": "collect.observeinc.com/v1/http",
     "extraPath": "observe/collector/host",
     "customer": "123456789012",
-    "token": "super-secret-token-generated-by-observe",
+    "token": "super-secret-datastream-token-generated-by-observe",
     "topic": "linux-host-monitoring",
     "brokerAddress": "kafka1.home:9092",
     "consumerGroup": "observe-consumer"
 }
 ```
-
-> The configuration above works with the newer Datastreams API. To ingest into the conventional Observations API, please change the apiUrl to point to `collect.observeinc.com/v1/observations` and, instead of using the datastream token, provide your customer token.
 
 > If you change the location of the config file, don't forget to update systemd script `observe-kafka-go.service` with the path to the config file `ExecStart=/usr/bin/observe-kafka-go /etc/observe/kafka-linux-host-monitoring.json`
 
